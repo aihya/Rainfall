@@ -5,7 +5,8 @@
 2.	Content:
 	First, atoi(3) is used to convert the first argument passed to the main,
 	and the latter is compared with the value 0x1a7 (423 in decimal). The 
-	program stops if they are not equal and continues otherwise.
+	program prints the message "No !" and stops if they are not equal, 
+	and continues otherwise.
 
 	There's two functions [setresgid, setresuid] in the main that are used to
 	access the "/bin/sh" file with the previliges of the binary owner, which 
