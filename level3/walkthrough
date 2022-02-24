@@ -1,0 +1,39 @@
+1.	Program type:
+	Running the command `file ./level2` we see the file is 32-bit ELF
+	executable.
+	Running the command `checksec --file ./level2, we see that the stack is
+	executable (NX disabled).
+
+2.	Content:
+	The 'main' function calls 'v' function.
+	fgets(3) is called inside 'v', which is a more secured version of gets(3).
+	Allowing to specify a number of bytes to be read, eliminating any 
+	possibility to do a buffer overflow (by eliminating we mean the bytes to
+	be read should not be more than the size of the buffer itself, otherwise 
+	you'are retarded, I mean the programmer).
+	The buffer is passed directly as first argument to printf(1), which allows
+	to utilize a format string vulnerability.
+
+	There's an if condition comparing the value 0x40 (64 in decimal) with a 
+	certain variable (global variable).
+
+	If they are equal, fwrite(3) writes the string "Wait what?!" and calls
+	system(3) with "/bin/sh" afterwards.
+
+	There's no way to change the value of the global variable to match the 
+	compared value directly.
+
+3.	Solution:
+	The idea is to use printf(1) to put 0x40 (64 in decimal) in the global 
+	variable.
+	
+	We need to find its address on the data segment, we can find it in the 
+	disassembly of the 'v' function:
+		0x080484da <+54>:	mov    eax , ds:0x804988c <-- (Simple ;p)
+
+	We will use the format string specifier %n to modify its value as follows:
+		"%60x%4$n"
+
+	The "%60x" part writes a padding of 60 bytes in the stdout, and "%4$n"
+	counts those written bytes and writes in the target address (the 4th 
+	address in the stack frame).
