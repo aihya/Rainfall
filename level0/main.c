@@ -13,7 +13,7 @@ int main(int argc, char **argv)
 		euid = geteuid(gid);
 		setresgid(egid, egid, egid);
 		setresuid(euid, euid, euid);
-		execv("/bin/sh", buffer);
+		execv("/bin/sh", &buffer);
 	}
 	else
 		fwrite("No !\n", 0x1, 0x5, stderr);

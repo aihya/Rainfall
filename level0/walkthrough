@@ -1,5 +1,12 @@
 1.	Program type:
-	Running the command `file ./level0` we see the file is 32-bit ELF executable. 
+	Running the command `file ./level0` we see the file is 32-bit ELF 
+	executable. 
 
 2.	Content:
-	There's one function "main", 
+	There's two functions [setresgid, setresuid] in the main that are used to
+	access the "/bin/sh" file with the previliges of the binary owner, which 
+	is used as parameter in execv (thats the goal).
+	But this is pretty much unnecessary, the reason being that binary is 
+	already a 'Set-UID' executable, which means all the files accessed with
+	such binary are accessed with the previliges of the ower of the binary, in
+	this case `execv("/bin/sh", "/bin/sh")`
