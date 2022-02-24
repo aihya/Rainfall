@@ -72,7 +72,7 @@ such binary are accessed with the previliges of the ower of the binary, in
 this case `execv("/bin/sh", "/bin/sh")`
 
 ## Reversing:
-Upon analyzing the disassembly code we concluded that the actual C code could be something as follow:
+Upon analyzing the disassembly code we concluded that the actual C code could be something as follows:
 
 ```C
 #include <stdio.h>
