@@ -16,3 +16,7 @@
 	already a 'Set-UID' executable, which means all the files accessed with
 	such binary are accessed with the previliges of the ower of the binary, in
 	this case `execv("/bin/sh", "/bin/sh")`
+
+3.	Solution:
+	Nothing fancy, becasue there's a simple comparison we just need to pass the
+	argument "423" to the binary and a shell will pop up.
