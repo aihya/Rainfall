@@ -10,7 +10,7 @@ int main(int argc, char **argv)
 	{
 		buffer = strdup("/bin/sh");
 		egid = getegid();
-		euid = geteuid(gid);
+		euid = geteuid();
 		setresgid(egid, egid, egid);
 		setresuid(euid, euid, euid);
 		execv("/bin/sh", &buffer);
