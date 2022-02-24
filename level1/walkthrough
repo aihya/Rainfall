@@ -18,4 +18,4 @@
 	The idea is to take advantage of the function 'gets' to further write on
 	the stack and overwrite the eip of the 'main''s stack frame, so that when
 	it reached the end, eip register will contain the address of the function
-	'run'
+	'run' and execute a shell with 'system'
