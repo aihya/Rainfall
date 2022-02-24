@@ -36,3 +36,4 @@
 	the return instruction twice, so when the mask validation occures, it'll 
 	find a correct address (not starting with 0xb) and the second address will 
 	jump to a memory area in the stack where our shellcode lies.
+
