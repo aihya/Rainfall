@@ -1,0 +1,5 @@
+1.	Program type:
+	Running the command `file ./level0` we see the file is 32-bit ELF executable. 
+
+2.	Content:
+	There's one function "main", 
