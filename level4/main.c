@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int	some_variable = 0x0
+int	some_variable = 0x0;
 
 void	p(char *buffer)
 {

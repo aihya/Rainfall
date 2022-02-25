@@ -1,3 +1,4 @@
+# Walkthrough
 ## Program type:
 * Running the command `file ./level2` we see the file is 32-bit ELF
 executable.
@@ -53,10 +54,6 @@ No RELRO        No canary found   NX disabled   No PIE          No RPATH   No RU
  8048545:	e8 8a ff ff ff       	call   80484d4 <p>
  804854a:	c9                   	leave
  804854b:	c3                   	ret
- 804854c:	90                   	nop
- 804854d:	90                   	nop
- 804854e:	90                   	nop
- 804854f:	90                   	nop
 ```
 * There's two function [`main`, `p`], `main` calls `p` and return.
 
@@ -68,7 +65,7 @@ condition other than '\0').
 function starts with `0xb`, this could be considered as a way to check if the
 `saved-eip` of the `p` function was overwritten using `gets(3)` with something 
 else other than the address that was meant to be there (the return address 
-pushed on the stack from the function `main`).
+pushed on the stack from the function `main`, something like [this](https://gcc.gnu.org/onlinedocs/gcc/Return-Address.html)).
 
 * If the `saved-eip` is changed, it `printf(1)` the changed address and calls 
 `exit(3)`. Otherwise, it `puts(3)` the content of the buffer and duplicate it 

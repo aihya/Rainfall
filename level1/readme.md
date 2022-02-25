@@ -1,3 +1,4 @@
+# Walkthrough
 ## Program type:
 * Running the command `file ./level1` we see the file is 32-bit ELF
 executable.
@@ -28,15 +29,6 @@ no direct call to run.
  8048490:	e8 ab fe ff ff       	call   8048340 <gets@plt>
  8048495:	c9                   	leave
  8048496:	c3                   	ret
- 8048497:	90                   	nop
- 8048498:	90                   	nop
- 8048499:	90                   	nop
- 804849a:	90                   	nop
- 804849b:	90                   	nop
- 804849c:	90                   	nop
- 804849d:	90                   	nop
- 804849e:	90                   	nop
- 804849f:	90                   	nop
 ```
 * The command `objdump -M intel -d ./level1` shows extra function `run`, it has two function calls ['fwrite', 'system'], `fwrite` prints the string "Good... Wait what?\n" and `system` calls "/bin/sh".
 

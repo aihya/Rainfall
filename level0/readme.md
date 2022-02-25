@@ -1,3 +1,4 @@
+# Walkthrough
 ## Program type:
 * Running the command `file ./level0` we see the file is 32-bit ELF executable. 
 ```
