@@ -19,5 +19,26 @@
 	the call to printf(1) is far from the buffer.
 	To solve the first problem we need to split the load of writting to the 
 	stdout so that we don't have to write millions of bytes, so we will write 
-	to the first left 2-bytes 258 bytes (0x102 in the compared value) and
+	to the left 2-bytes 258 bytes (0x102 in the compared value) and
 	then write to the right 2-bytes 21828 bytes (0x5544 in the compared value).
+	Now the only thing that remains is to figure out the location of the target
+	buffer on stack. To do so, we can use a string like after we run the 
+	program:
+
+		AAAA %p %p %p %p %p %p %p %p %p %p %p %p %p
+	
+	which will result in this:
+	
+		AAAA		0xb7ff26b0	0xbffff754	0xb7fd0ff4 
+		(nil)		(nil)		0xbffff718	0x804848d
+		0xbffff510	0x200		0xb7fd1ac0	0xb7ff37d0
+		0x41414141	0x20702520	...
+
+	The value 0x41414141 that we see on the last line is the hexadecimal
+	representation if the word "AAAA", and the hex values that comes before it
+	are the content of the double words on the stack litterally before the call
+	to the function printf(1).
+
+	If we replaced the word "AAAA" with an actual address and counted from the 
+	beginning to it's hexadecimal representation, we can give that number to 
+	the specifier %n so it will write to that specific address.
