@@ -17,8 +17,7 @@ void	p(void)
 		exit(1);
 	}
 	puts(buffer);
-	strdup(buf);
-	return (0); // Probably returns 0
+	strdup(buffer);
 }
 
 int	main()

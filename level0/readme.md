@@ -1,8 +1,15 @@
 ## Program type:
-Running the command `file ./level0` we see the file is 32-bit ELF executable. 
+* Running the command `file ./level0` we see the file is 32-bit ELF executable. 
 ```
 level0@RainFall:~$ file ./level0
 ./level0: setuid ELF 32-bit LSB executable, Intel 80386, version 1 (GNU/Linux), statically linked, for GNU/Linux 2.6.24, BuildID[sha1]=0x85cf4024dbe79c7ccf4f30e7c601a356ce04f412, not stripped
+```
+* Running the command `checksec --file ./level1`, we see that the stack is 
+executable (NX disabled).
+```
+level0@RainFall:~$ checksec --file ./level0
+RELRO           STACK CANARY      NX            PIE             RPATH      RUNPATH      FILE
+No RELRO        No canary found   NX enabled    No PIE          No RPATH   No RUNPATH   ./level0
 ```
 ## Content:
 ```
@@ -98,12 +105,11 @@ int main(int argc, char **argv)
 }
 ```
 ## Solution:
-Nothing fancy, becasue there's a simple comparison we just need to pass the
-argument "423" to the binary and a shell will pop up.
+* Nothing fancy, because there's a simple comparison we just need to pass the argument "423" to the binary and a shell will pop up.
 
 ```
 level0@RainFall:~$ ./level0 423
-$ whoami
-level1
+$ cat /home/user/level1/.pass
+1fe8a524fa4bec01ca4ea2a869af2a02260d4a7d5fe7e7c24d8617e6dca12d3a
 $
 ```
