@@ -1,0 +1,23 @@
+1.	Program type:
+	Running the command `file ./level4` we see the file is 32-bit ELF
+	executable.
+	Running the command `checksec --file ./level4, we see that the stack is
+	executable (NX disabled).
+
+2.	Content:
+	There's three functions ['main', 'n', 'p'].
+	The content of the function 'n' is almost close to the previous level, the 
+	difference being that instead of having the function printf(1) in the 
+	function 'n' it's now in 'p', which makes it even further from the target
+	buffer.
+	There's a comparison between the value 0x1025544 (16930116 in decimal) and
+	a global variable, and a system(3) call if they are equal.
+
+3.	Solution:
+	There's two problems in this case, the first is that the compared value 
+	is big (in comparison to the previous level 0x40), and the second is that
+	the call to printf(1) is far from the buffer.
+	To solve the first problem we need to split the load of writting to the 
+	stdout so that we don't have to write millions of bytes, so we will write 
+	to the first left 2-bytes 258 bytes (0x102 in the compared value) and
+	then write to the right 2-bytes 21828 bytes (0x5544 in the compared value).

@@ -1,7 +1,7 @@
 1.	Program type:
-	Running the command `file ./level2` we see the file is 32-bit ELF
+	Running the command `file ./level3` we see the file is 32-bit ELF
 	executable.
-	Running the command `checksec --file ./level2, we see that the stack is
+	Running the command `checksec --file ./level3, we see that the stack is
 	executable (NX disabled).
 
 2.	Content:
