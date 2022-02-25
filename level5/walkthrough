@@ -1,0 +1,46 @@
+1.	Program type:
+	Running the command `file ./level4` we see the file is 32-bit ELF
+	executable.
+	Running the command `checksec --file ./level4, we see that the stack is
+	executable (NX disabled).
+
+2.	Content:
+	There are two functions ['n', 'o'], 'n' is called directly from 'main' but
+	'o' has no caller.
+	'n' fills a buffer from stdin with fgets(3) and pass the buffer as first 
+	argument to printf(1), then calls exit(3).
+	'o' contains a system(3) call with the string "/bin/sh" in it and then 
+	exit(3).
+
+3.	Solution:
+	The goal is to call the function 'o' because it has the system(3) call.
+	If we use printf(1) as in the previous level, we might use it to change the
+	value of the saved-eip of the function 'n' to point to the instruction of
+	system(3), that way when it calls the ret instruction the eip calls 
+	'o' and spawns a shell. The problem though is the function exit(3), it will
+	interupt the normal flow of execution and stops the program, meaning no
+	system(3) call.
+
+	Enters PLT, a mechanisme for mapping between the libc functions and 
+	their corresponding ones on the binary. For instance, calling exit(3) for 
+	the first time will force the PLT to figure out the address of exit(3)
+	inside libc and then execute its instructions:
+
+		080483d0 <exit@plt>:
+			80483d0:	ff 25 38 98 04 08    jmp    DWORD PTR ds:0x8049838
+ 			80483d6:	68 28 00 00 00       push   0x28
+			80483db:	e9 90 ff ff ff       jmp    8048370 <_init+0x3c>
+
+	We will use the same previous method to solve this case, targeting the 
+	address 0x8049838 in the first line to change its value so that when 
+	exit(3) is called it'll jump to out address (the address of 'o').
+
+	Before the exploit is executed the address 0x8049838 contains:
+
+		0x8049838 <exit@got.plt>:	0x080483d6
+
+	and after printf(1) writes the wanted value we get:
+
+		0x8049838 <exit@got.plt>:	0x080484a4
+
+	Now when exit(3) is called, the flow jumps to the function 'o'.
