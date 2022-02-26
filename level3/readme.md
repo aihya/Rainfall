@@ -70,7 +70,7 @@ No RELRO        No canary found   NX disabled   No PIE          No RPATH   No RU
 Allowing to specify a number of bytes to be read, eliminating any 
 possibility to do a buffer overflow (by eliminating we mean the bytes to
 be read should not be more than the size of the buffer itself, otherwise 
-you'are retarded, I mean the programmer).
+you'are stupid, I mean the programmer).
 * The buffer is passed directly as first argument to `printf(1)`, which allows
 to utilize a format string vulnerability.
 
