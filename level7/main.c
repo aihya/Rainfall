@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-char	*key = "";
+char	key[0x44];
 
 void	m()
 {
@@ -28,7 +28,7 @@ int		main(int argc, char **argv)
 	strcpy(ptr_1 + 4, argv[1]);
 	strcpy(ptr_2 + 4, argv[2]);
 
-	fgets(buffer, 0x44, fopen("/home/user/level8/.pass", "r"));
+	fgets(key, 0x44, fopen("/home/user/level8/.pass", "r"));
 	puts("~~");
 
 	return (0);
