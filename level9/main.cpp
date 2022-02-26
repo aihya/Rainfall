@@ -8,7 +8,7 @@ public:
 	N& operator+(N& instance);
 	N& operator-(N& instance);
 private:
-	void	*something;
+	void	*something; // ???
 	char	buffer[100];
 	int 	raqm;
 }
@@ -18,7 +18,7 @@ void N::setAnnotation(char *str)
 	size_t	size;
 	
 	size = strlen(str);
-	memcpy(this->buf, str, size);
+	memcpy(this->buffer, str, size);
 }
 
 int	main(int argc, char **argv)
