@@ -15,17 +15,14 @@ void	m() // 0x8048468
 
 void	main(int argc, char *argv[])
 {
-	void	*buffer1;
-	void	*buffer2;
+	char	*buffer1;
+	int		*buffer2;
 
-	buffer1 = malloc(0x40); // 64 bytes
-	buffer2 = malloc(0x4); // 4 bytes
+	buffer1 = malloc(0x40); // esp + 0x1c
+	buffer2 = malloc(0x4); // esp + 0x18
 
 	*buffer2 = 0x8048468;
 
-	if ((int)(*buffer) == 0x8048468)
-		printf("a\n");
-//	printf("%d\n", strcmp(buffer, 0x804868));
-//	strcpy(buffer1, argv[1]);
-//	((void(*(*buffer2))(void))();
+	strcpy(buffer1, argv[1]);
+	((void (*)(void))((void*)buffer2))();
 }
