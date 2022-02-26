@@ -1,0 +1,38 @@
+1.	Program type:
+	Running the command `file ./level7` we see the file is 32-bit ELF
+	executable.
+	Running the command `checksec --file ./level7, we see that the stack is
+	executable (NX disabled).
+
+2.	Content:
+	There's one function 'm' apart of 'main', the only thing it does is get the
+	current time using time(2), then print it alongside with a key stored in
+	a global variable.
+
+	'main' has four calls to `malloc` all of them of size 0x8 bytes, the 
+	addressed of the second and the fourth mallocs are stored in the first and 
+	third malloc's last four bytes:
+		
+		0x804a000:	0x00000000	0x00000011	0x00000001	0x0804a018 <---
+		0x804a010:	0x00000000	0x00000011	0x00000000	0x00000000
+		0x804a020:	0x00000000	0x00000011	0x00000002	0x0804a038 <---
+		0x804a030:	0x00000000	0x00000011	0x00000000	0x00000000
+
+	The strcpy(3) is used to write argv[1] and argv[2] into the memory pointed
+	by those addresses respectivelly.
+
+	fgets(3) puts the content of the file "/home/user/level8/.pass" in the 
+	global variable.
+
+	The problem is there is no direct call to 'm'.
+
+3.	Solution:
+	We need to find a way to call 'm', we'll use strcpy to write the address of 
+	the function 'm' into GOT entry of the function puts(1). The way we achieve 
+	that is by overflowing the heap starting from the beginning of the address 
+	stored in the first allocation to override the address the forth 
+	allocation. 
+
+	When the second strcpy(3) is called, the value stored in that overwritten 
+	address will be replaced by the second argument's value, which is the
+	address of the function 'm'.
