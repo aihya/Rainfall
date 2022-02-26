@@ -21,7 +21,7 @@ void	main(int argc, char *argv[])
 	buffer1 = malloc(0x40); // esp + 0x1c
 	buffer2 = malloc(0x4); // esp + 0x18
 
-	*buffer2 = 0x8048468;
+	*buffer2 = 0x8048468; // Or *buffer2 = (int)&m;
 
 	strcpy(buffer1, argv[1]);
 	((void (*)(void))((void*)buffer2))();

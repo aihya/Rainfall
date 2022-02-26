@@ -1,0 +1,32 @@
+1.	Program type:
+	Running the command `file ./level6` we see the file is 32-bit ELF
+	executable.
+	Running the command `checksec --file ./level6, we see that the stack is
+	executable (NX disabled).
+
+2.	Content:
+	There's two functions ['m', 'n'].
+	'n' has no direct caller, while 'm' is called using its address.
+
+	The 'main' function contains two malloc(3), the first allocate 0x40 bytes
+	(64 bytes in decimal) and the second allocate 0x4 bytes (4 bytes in 
+	decimal). We assumed that the buffers are of types char* and int* 
+	respectively, the reason being that the first buffer (buffer1) is used to
+	store the content of the argv[1], an strcpy(3) is used for that reason.
+	Where the second buffer (buffer2) is use to store the address of the 
+	function that will be called at the end of 'main'.
+
+	when we run the program normally and give it an argument withing the bounds
+	of the first buffer (64 bytes), we'll find that buffer2 will contain the 
+	hardcoded address (the address of the function 'm'). After the strcpy(3)
+	copies argv[1] to buffer1, the address in buffer2 will be called resulting
+	in printing the string "Nope" using puts(3).
+
+	Our problem is to call the function 'n' instead of 'm'.
+
+3.	Solution:
+	To solve the problem we will do a heap buffer overflow, if we look at the 
+	the representation of the two allocations we can see that the buffer2
+	address comes after the allocation of buffer1, which means if we extend 
+	the writting in buffer1 we can change the previous value in buffer2 so that
+	it containes the address of function 'n' and shell will spawn.
