@@ -1,0 +1,42 @@
+1.	Program type:
+    Running the command `file ./bonus3` we see the file is 32-bit ELF
+	executable.
+	Running the command `checksec --file ./bonus3, and it seems like the NX
+    is ennabled, so no shellcode for you.
+2.	Content:
+    We only have one function here the good old `main` function.
+
+    Reading it we see that it get the content of `/home/user/end/.pass` using `fopen`,
+    do some kind of `bezero` on a buffer, nullifying it first 33 bytes of it,
+
+    The program exits if the fd is 0 or if we dont pass the second an additional argument.
+
+    Then after that using `fread` it fills the buffer with the code from the next level.
+
+    And here where the weird stuff start happening, they put a 0x0 on the 89th position
+    in the buffer then another 0x0 in another postion using atoi on the first argument
+    passed.
+
+    then it reads again from fd 0x41 bytes starting from the buffer postion 66,
+    then it closes the file.
+
+    After that we got a comparison between the buffer containing the key and the first
+    argument (argv[1]) using `strcmp`, if the comparison is falsy the program launchs
+    a shell using `execl`.
+
+3.  Solution:
+    So the whole problematic is to find a way for strcmp return to equal 0 in that case
+    that would mean that the two strings are equal.
+
+    We obviously can guess the hash stored in the .pass file, and the only thing that modifies
+    the useful part of the buffer is where the program puts an 0x0 where the first argument
+    tells it to using `atoi`, and there my friends is our ticket to finish the last bonus.
+
+    by passing an empty string `""` as an argument, it does count still as if we passed an
+    argument to the program ans so the argc is 2, atoi of an empty string is `0` so we put a 0
+    in the postion 0.
+
+    Since strcmp returns the substraction of the characters, since both of strings first character
+    is 0 the return of it is falsy so the program executes `/bin/sh` and a shell pops up
+
+

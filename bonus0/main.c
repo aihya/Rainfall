@@ -21,9 +21,9 @@ void pp(char *buff)
     p(secondBuffer, " - ");
 
     strcpy(buff, firstBuffer);
-
-
-    strcpy(buff + strlen(buff), " ");
+    int len  = strlen(buff);
+    buff[strlen(buff)] = ' ';
+    buff[strlen(buff) + 1] = 0x0;
     strcat(buff, secondBuffer);
 }
 

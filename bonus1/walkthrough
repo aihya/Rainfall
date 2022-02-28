@@ -1,0 +1,44 @@
+1.	Program type:
+    Running the command `file ./bonus1` we see the file is 32-bit ELF
+	executable.
+	Running the command `checksec --file ./bonus1, we see that the stack is
+	executable (NX disabled).
+2.	Content:
+    From the disassembly of the main function we notice that there no call of
+    user-defined functions.
+
+    The first thing we encounter is a call to `atoi` using the first parameter
+    passed to the program and stores it in a varaible it's greater than 0x9
+    the main returns dirrectly.
+
+    After that we got a call to memcpy with a presumable baffer as the first parameter,
+    The second programs's parameter as it seconds, and last the varaible that stores
+    the atoi done previously multiplied by 4.
+
+    and right after that we got a comparison between the value of the varaible were
+    we stored the result of atoi and a seemingly big number  `0x574f4c46`, if the
+    condition is truethy the program launchs a shell.
+
+4.  Soltion:
+    The first informationand the most important one that we should take into
+    consideration is the prototype of the function memcpy:
+    ```
+     memcpy(void *restrict dst, const void *restrict src, size_t n);
+
+    ```
+    We may think of overflowing the buffer to update the value in the comparison
+    but theres that if condition checking if the value of it is greater than 09
+
+    We notice that the last argument that we should pass to memcpy is a size_t
+    an unsigned int value, contrasting with the int value returned by atoi,
+    we could use that difference in byte representation to our adventage since
+    we choose first value.
+
+    Another thing we may add is that when dealing with those number, lets think
+    about that multiplication by 4 as a left shift by two.
+
+    so our best bet woudl be to find a number that would be negative in it int
+    represenation, positive and big enough in it size_t representation to ennable
+    us to overflow the buffer and write into the value we need.
+
+    I used this website to find that number http://www.binaryconvert.com/.

@@ -20,7 +20,7 @@ int	main(int argc, char **argv)
 
 	fclose(fd);
 
-	if (strcmp(key, argv[1]))
+	if (!strcmp(key, argv[1]))
 		execl("/bin/sh", "sh", NULL);
 	else
 		puts(key + 0x42);
