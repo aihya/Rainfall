@@ -1,0 +1,25 @@
+1.	Program type:
+	Running the command `file ./level8` we see the file is 32-bit ELF
+	executable.
+	Running the command `checksec --file ./level8, we see that the stack is
+	executable (NX disabled).
+
+2.	Content:
+	There's two global variables ['service', 'auth'] and the function 'main',
+	The main contains an infinite while loop, inside of it a buffer of size 
+	128 bytes is filled using fgets, buffer is then compared with the
+	string ['auth ', 'reset', 'service', 'login']. The first comparison results
+	in a malloc(0x4) to the global variable auth, the second frees that 
+	allocation, the fourth duplicates whatever comes after the string 'service'
+	and in the scope of the last comparison there's a check for whether
+	' auth + 0x20' is null or not, and spawns a shell with system(3) or write 
+	the string "Password:\n"
+
+3.	Solution:
+	To solve this level we kust need to make sure the address in 'auth + 0x20'
+	is filled with something.
+
+	First we enter the string 'auth ' for give the gloval variable in address
+	in memory, after that we enter the string 'service' followed with enough 
+	bytes intill we reach the 'auth + 0x20' and then enter 'login', 
+	automatically a shell will spawn.

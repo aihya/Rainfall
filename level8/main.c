@@ -1,5 +1,5 @@
 char	*service = NULL;
-char	*auth = NULL; // 0x804a008
+int		*auth; // 0x804a008
 
 int		main()
 {
@@ -10,7 +10,7 @@ int		main()
 		printf("%p, %p \n", auth, service);
 		if (fgets(buffer, 0x80, stdin))
 			break ;
-		else if (strncmp(buffer, "auth ", 5) == 0)
+		if (strncmp(buffer, "auth ", 5) == 0)
 		{
 			auth = malloc(0x4);
 			*auth = 0x0;
