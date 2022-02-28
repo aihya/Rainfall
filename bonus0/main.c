@@ -22,11 +22,10 @@ void pp(char *buff)
 
     strcpy(buff, firstBuffer);
     int len  = strlen(buff);
-    buff[strlen(buff)] = ' ';
-    buff[strlen(buff) + 1] = 0x0;
+    buff[len] = ' ';
+    buff[len + 1] = 0x0;
     strcat(buff, secondBuffer);
 }
-
 
 int main(int argc, char **argv)
 {
