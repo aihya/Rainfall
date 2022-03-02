@@ -1,0 +1,30 @@
+1.	Content:
+	The 'main' function nullify 0x13 bytes of a buffer then 0x28 bytes from 
+	argv[1] to it and then adds to it 0x20 bytes from argv[2].
+
+	getenv is called to get the environment variable "LANG", if it's set we 
+	compare it with the string "fi" and the string "nl", and set the global 
+	variable language to 0x1 or 0x2 respectively, the copy 0x13 bytes from 
+	buffer to lang and call greetuser with buffer as argument.
+
+	greetuser checks the content of the global variable language if it's equal
+	to 0x1, 0x2 or something else. In the first case, an strcpy is used to copy
+	"Hyvää päivää " to in internal buffer, the second case copies
+	"Goedemiddag! " and last case copies "Hello ". Then strcat the internal 
+	buffer with greetuser's argument and puts the buffer.
+
+2.	Solution:
+	Simply put, the buffer in 'greetuser' is the one we will target to overflow.
+	We know that one of the three string in the function greetuser is prefixed 
+	in the buffer and concatenate the argument to it, this will cause the 
+	buffer to overflow (specifically when the argument is of size greater than
+	or equal to 72 bytes), so it's just a matter of figuring out the right 
+	offset to subtract from the argv[2].
+
+	The idea is to write 76 bytes in total into 'greetuser' buffer taking in
+	consideration the size of the string that will be prefixed, this will 
+	override the saved-ebp, then we add the target saved-eip and we pass our
+	shellcode.
+
+	The shellcode is located in argv[2] so we need to find its address and
+	point saved-eip to it.

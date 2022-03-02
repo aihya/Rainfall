@@ -4,7 +4,7 @@ char	language = 0x0;
 
 void	greetuser(char *main_buffer)
 {
-	char	buffer[76];	// $esp + 0x48 // 0x48
+	char	buffer[72];	// $ebp - 0x48 // 0x48
 
 	if (language == 0x1)
 		strcpy(buffer, "Hyvää päivää ");
@@ -16,10 +16,10 @@ void	greetuser(char *main_buffer)
 	puts(buffer);
 }
 
-int		main(int argc, char **argv)
+void	main(int argc, char **argv)
 {
-	char	buffer[73];	// $esp + 0x50
-	char	lang;	// $esp + 0x9c
+	char	buffer[76];	// $esp + 0x50
+	char	*lang;	// $esp + 0x9c
 
 	if (argc != 0x3)
 		return (0x1);
@@ -36,6 +36,6 @@ int		main(int argc, char **argv)
 		else if (memcmp(lang, "nl", 0x2))
 			language = 0x2;
 	}
-	strncpy(lang, buffer, 0x13);
-	return (greetuser(buffer));
+	strncpy(lang, buffer, 0x13); // probably !!!
+	greetuser(buffer);
 }

@@ -7,7 +7,7 @@
     We only have one function here the good old `main` function.
 
     Reading it we see that it get the content of `/home/user/end/.pass` using `fopen`,
-    do some kind of `bezero` on a buffer, nullifying it first 33 bytes of it,
+    do some kind of memset(3) on a buffer, nullifying it first 33 bytes of it,
 
     The program exits if the fd is 0 or if we dont pass the second an additional argument.
 
